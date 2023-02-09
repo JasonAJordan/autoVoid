@@ -35,7 +35,9 @@ public class UnitScript : MonoBehaviour
     }
 
     public void TakeDamage(int damage){
-        hp = hp - damage; 
+        int newHp = hp - damage;
+        hp = newHp < 0 ? 0 : newHp;
+         
         // hpText.text = "" + hp;
     }
 }

@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     { if (battleLive){
         startCombatButton.SetActive (false);
 
-        // checkAllUnitHPs();
+        checkAllUnitHPs();
 
         period += Time.deltaTime;
  
@@ -83,8 +83,14 @@ public class GameManager : MonoBehaviour
         UnitScript h1Script = hero1.gameObject.GetComponent<UnitScript>();
         UnitScript e1Script = enemy1.gameObject.GetComponent<UnitScript>();
 
-        if ((h1Script.hp <= 0) || (e1Script.hp <= 0)){
+        if (e1Script.hp <=0){
             toggleCombat();
+            actionDisplayText.text = "First enemy defeated";
+        }
+        // This would house all the hp pool
+        if ((h1Script.hp <= 0) ){
+            toggleCombat();
+            actionDisplayText.text = "Party all K.O. Combat ended.";
         }
     }
 
@@ -125,8 +131,8 @@ public class GameManager : MonoBehaviour
 
     public void damageUnit(GameObject unit, int damage, UnitScript attackingUnit){
         UnitScript unitScript = unit.gameObject.GetComponent<UnitScript>();
-        unitScript.hp = unitScript.hp - damage;
-        // unitScript.TakeDamage(damage);
+        // unitScript.hp = unitScript.hp - damage;
+        unitScript.TakeDamage(damage);
 
         Debug.Log( attackingUnit.title + " has damaged " + unitScript.title + " for " + damage);
         actionDisplayText.text = attackingUnit.title + " has damaged " + unitScript.title + " for " + damage 
