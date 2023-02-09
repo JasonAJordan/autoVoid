@@ -18,26 +18,29 @@ public class GameManager : MonoBehaviour
 
     public int round; 
 
-    public GameObject Hero1;
-    public GameObject Hero2;
-    public GameObject Hero3;
-    public GameObject Hero4;
+    public GameObject hero1;
+    public GameObject hero2;
+    public GameObject hero3;
+    public GameObject hero4;
     
-    public GameObject Enemy1; 
+    public GameObject enemy1; 
 
     public List<UnitScript> attackOrder; 
 
     // Game UI and related
-    public TextMeshProUGUI ActionCounter;
+    public TextMeshProUGUI actionCounter;
 
     public GameObject startCombatButton;
+
+    public TextMeshProUGUI actionDisplayText; 
 
     // Start is called before the first frame update
     void Start()
     {
         round = 1;
         // Maybe I can feed in only the unitScripts here
-        createAttackOrder(Hero1, Hero2, Enemy1);
+        // createAttackOrder(hero1, hero2, Enemy1);
+        createAttackOrder(hero1, enemy1);
     }
 
     // Update is called once per frame
@@ -45,15 +48,27 @@ public class GameManager : MonoBehaviour
     { if (battleLive){
         startCombatButton.SetActive (false);
 
+        // checkAllUnitHPs();
+
         period += Time.deltaTime;
  
+        // An action step 
         if (period >= turnSpeed) {
             period = period - turnSpeed;
 
-            // execute block of code here
+            UnitScript currentUnit = attackOrder[counter % attackOrder.Count];
+            int damage = currentUnit.BasicAttack();
+            
+            if (currentUnit.enemy){
+                damageUnit(hero1, damage, currentUnit);
+            } else {
+                damageUnit(enemy1, damage, currentUnit);
+            }
+
             counter++; 
-            ActionCounter.text = "Action Number " + counter;
+            actionCounter.text = "Action Number " + counter;
         }
+        
 
         }
     }
@@ -63,17 +78,27 @@ public class GameManager : MonoBehaviour
         battleLive = !battleLive; 
     }   
 
+    // checks to see if either all hero or enemy unit hp total is less than 0
+    public void checkAllUnitHPs(){
+        UnitScript h1Script = hero1.gameObject.GetComponent<UnitScript>();
+        UnitScript e1Script = enemy1.gameObject.GetComponent<UnitScript>();
+
+        if ((h1Script.hp <= 0) || (e1Script.hp <= 0)){
+            toggleCombat();
+        }
+    }
 
     // This might be a huge fail by me, I'm going to google unity turn base rpg attack speed
     
-    public void createAttackOrder(GameObject Hero1, GameObject Hero2, GameObject Enemy1){
+    public void createAttackOrder(GameObject hero1, GameObject enemy1){
+        //  GameObject hero2
 
-        UnitScript h1Script = Hero1.gameObject.GetComponent<UnitScript>();
-        UnitScript h2Script = Hero2.gameObject.GetComponent<UnitScript>();
-        UnitScript e1Script = Enemy1.gameObject.GetComponent<UnitScript>();
+        UnitScript h1Script = hero1.gameObject.GetComponent<UnitScript>();
+        // UnitScript h2Script = hero2.gameObject.GetComponent<UnitScript>();
+        UnitScript e1Script = enemy1.gameObject.GetComponent<UnitScript>();
         // Debug.Log(h1Script, h2Script);
         attackOrder.Add(h1Script);
-        attackOrder.Add(h2Script);
+        // attackOrder.Add(h2Script);
         attackOrder.Add(e1Script);
 
         attackOrder = attackOrder.OrderBy( w=> w.speed).ToList();
@@ -97,5 +122,23 @@ public class GameManager : MonoBehaviour
 
         // Debug.Log(attackOrder);
     }
+
+    public void damageUnit(GameObject unit, int damage, UnitScript attackingUnit){
+        UnitScript unitScript = unit.gameObject.GetComponent<UnitScript>();
+        unitScript.hp = unitScript.hp - damage;
+        // unitScript.TakeDamage(damage);
+
+        Debug.Log( attackingUnit.title + " has damaged " + unitScript.title + " for " + damage);
+        actionDisplayText.text = attackingUnit.title + " has damaged " + unitScript.title + " for " + damage 
+                                + ". HP "+  unitScript.hp;
+    }
+
+
+
+    // I may not ever need this if each type of attack hit X space
+    public void selectAttackTarget(){
+
+    }
+
 
 }
