@@ -3,7 +3,14 @@ guid: 042326d76ec1b9f44af0073da832b964
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - Hero1: {instanceID: 0}
+  - Hero2: {instanceID: 0}
+  - Hero3: {instanceID: 0}
+  - Hero4: {instanceID: 0}
+  - Enemy1: {instanceID: 0}
+  - ActionCounter: {instanceID: 0}
+  - startCombatButton: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
