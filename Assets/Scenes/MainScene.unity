@@ -144,6 +144,44 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5697332505134663049, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
   m_PrefabInstance: {fileID: 5697332505366172541}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &309696245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309696244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a6901f2f8d2a645ae9fbdba61a3bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Strong Attack
+  damageMod: 1.5
+  critMod: 1
+  slot: 1
+  targets: 0
+  status: 0
+  statusRate: 0
+--- !u!114 &309696246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309696244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a6901f2f8d2a645ae9fbdba61a3bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Basic Attack
+  damageMod: 1
+  critMod: 1
+  slot: 1
+  targets: 1
+  status: 0
+  statusRate: 0
 --- !u!1 &381268024
 GameObject:
   m_ObjectHideFlags: 0
@@ -1178,6 +1216,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 878841760417508442, guid: 98d280076f0811a4da7e8ec35c2e8b20, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1020232076470374881, guid: 98d280076f0811a4da7e8ec35c2e8b20, type: 3}
       propertyPath: m_Name
       value: Hero 2
@@ -1486,6 +1528,26 @@ PrefabInstance:
       propertyPath: hp
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
+      propertyPath: slot
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
+      propertyPath: statAttack
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
+      propertyPath: moves.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
+      propertyPath: moves.Array.data[0]
+      value: 
+      objectReference: {fileID: 309696246}
+    - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
+      propertyPath: moves.Array.data[1]
+      value: 
+      objectReference: {fileID: 309696245}
     - target: {fileID: 5697332505134663049, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
       propertyPath: m_Name
       value: Hero 1

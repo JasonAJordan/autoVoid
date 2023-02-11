@@ -57,12 +57,16 @@ public class GameManager : MonoBehaviour
             period = period - turnSpeed;
 
             UnitScript currentUnit = attackOrder[counter % attackOrder.Count];
-            int damage = currentUnit.BasicAttack();
+            // int damage = currentUnit.BasicAttack();
             
+            // I would proby just replace this whole thing with passing the move script down so
+            // I can get other information like crit, status, etc. 
+            (int slot, int damage, string moveName) = currentUnit.GetAttack(); 
+
             if (currentUnit.enemy){
-                damageUnit(hero1, damage, currentUnit);
+                damageUnit(hero1, damage, currentUnit, moveName);
             } else {
-                damageUnit(enemy1, damage, currentUnit);
+                damageUnit(enemy1, damage, currentUnit, moveName);
             }
 
             counter++; 
@@ -129,14 +133,16 @@ public class GameManager : MonoBehaviour
         // Debug.Log(attackOrder);
     }
 
-    public void damageUnit(GameObject unit, int damage, UnitScript attackingUnit){
+    public void damageUnit(GameObject unit, int damage, UnitScript attackingUnit, string moveName){
         UnitScript unitScript = unit.gameObject.GetComponent<UnitScript>();
         // unitScript.hp = unitScript.hp - damage;
         unitScript.TakeDamage(damage);
 
         Debug.Log( attackingUnit.title + " has damaged " + unitScript.title + " for " + damage);
-        actionDisplayText.text = attackingUnit.title + " has damaged " + unitScript.title + " for " + damage 
-                                + ". HP "+  unitScript.hp;
+        actionDisplayText.text = 
+            attackingUnit.title + " has damaged " + unitScript.title + " for " + damage 
+            + " with " + moveName;
+                                ///+ ". HP "+  unitScript.hp;
     }
 
 

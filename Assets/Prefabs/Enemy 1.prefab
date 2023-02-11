@@ -247,6 +247,7 @@ GameObject:
   - component: {fileID: 7544134627734247590}
   - component: {fileID: 7544134627734247591}
   - component: {fileID: -5991558572479540018}
+  - component: {fileID: 393077982}
   m_Layer: 0
   m_Name: Enemy 1
   m_TagString: Untagged
@@ -338,6 +339,29 @@ MonoBehaviour:
   hp: 60
   speed: 12
   attackTimes: 2
-  attack: 3
+  statAttack: 3
   enemy: 1
+  slot: 0
+  moves:
+  - {fileID: 393077982}
+  actionNumber: 0
   hpText: {fileID: 468095062}
+--- !u!114 &393077982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7544134627734247588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a6901f2f8d2a645ae9fbdba61a3bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Smash
+  damageMod: 5
+  critMod: 1
+  slot: 0
+  targets: 1
+  status: 0
+  statusRate: 0
