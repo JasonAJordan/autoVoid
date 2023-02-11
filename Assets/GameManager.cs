@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Linq;
+
 public class GameManager : MonoBehaviour
 {
     // Battle Actives
@@ -18,12 +19,16 @@ public class GameManager : MonoBehaviour
 
     public int round; 
 
-    public GameObject hero1;
-    public GameObject hero2;
-    public GameObject hero3;
-    public GameObject hero4;
+    // public GameObject hero1;
+    // public GameObject hero2;
+    // public GameObject hero3;
+    // public GameObject hero4;
     
-    public GameObject enemy1; 
+    public List<GameObject> heroes;
+
+    // public GameObject enemy1; 
+
+    public List<GameObject> enemies;
 
     public List<UnitScript> attackOrder; 
 
@@ -40,7 +45,7 @@ public class GameManager : MonoBehaviour
         round = 1;
         // Maybe I can feed in only the unitScripts here
         // createAttackOrder(hero1, hero2, Enemy1);
-        createAttackOrder(hero1, enemy1);
+        createAttackOrder(heroes, enemies);
     }
 
     // Update is called once per frame
@@ -59,14 +64,15 @@ public class GameManager : MonoBehaviour
             UnitScript currentUnit = attackOrder[counter % attackOrder.Count];
             // int damage = currentUnit.BasicAttack();
             
-            // I would proby just replace this whole thing with passing the move script down so
-            // I can get other information like crit, status, etc. 
-            (int slot, int damage, string moveName) = currentUnit.GetAttack(); 
+            MoveScript moveScript = currentUnit.GetAttack(); 
+
+            // I believe I should make a function which uses moveScript's slots and targets values 
+            // and dynamicly call "damageUnit" if the unit is in the slot. 
 
             if (currentUnit.enemy){
-                damageUnit(hero1, damage, currentUnit, moveName);
+                damageUnit(heroes[0], currentUnit, moveScript);
             } else {
-                damageUnit(enemy1, damage, currentUnit, moveName);
+                damageUnit(enemies[0], currentUnit, moveScript);
             }
 
             counter++; 
@@ -84,8 +90,9 @@ public class GameManager : MonoBehaviour
 
     // checks to see if either all hero or enemy unit hp total is less than 0
     public void checkAllUnitHPs(){
-        UnitScript h1Script = hero1.gameObject.GetComponent<UnitScript>();
-        UnitScript e1Script = enemy1.gameObject.GetComponent<UnitScript>();
+        // I will need to learn how to make a proper unity c# loop to map ListGameObjects -> List/Set [hp]
+        UnitScript h1Script = heroes[0].gameObject.GetComponent<UnitScript>();
+        UnitScript e1Script = enemies[0].gameObject.GetComponent<UnitScript>();
 
         if (e1Script.hp <=0){
             toggleCombat();
@@ -100,12 +107,12 @@ public class GameManager : MonoBehaviour
 
     // This might be a huge fail by me, I'm going to google unity turn base rpg attack speed
     
-    public void createAttackOrder(GameObject hero1, GameObject enemy1){
-        //  GameObject hero2
-
-        UnitScript h1Script = hero1.gameObject.GetComponent<UnitScript>();
+    public void createAttackOrder(List<GameObject> heroes, List<GameObject> enemies){
+        
+        // I will need to learn how to make a proper unity c# loop 
+        UnitScript h1Script = heroes[0].gameObject.GetComponent<UnitScript>();
         // UnitScript h2Script = hero2.gameObject.GetComponent<UnitScript>();
-        UnitScript e1Script = enemy1.gameObject.GetComponent<UnitScript>();
+        UnitScript e1Script = enemies[0].gameObject.GetComponent<UnitScript>();
         // Debug.Log(h1Script, h2Script);
         attackOrder.Add(h1Script);
         // attackOrder.Add(h2Script);
@@ -133,16 +140,18 @@ public class GameManager : MonoBehaviour
         // Debug.Log(attackOrder);
     }
 
-    public void damageUnit(GameObject unit, int damage, UnitScript attackingUnit, string moveName){
+    public void damageUnit(GameObject unit, UnitScript attackingUnit, MoveScript moveScript){
         UnitScript unitScript = unit.gameObject.GetComponent<UnitScript>();
-        // unitScript.hp = unitScript.hp - damage;
+
+        int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));
         unitScript.TakeDamage(damage);
 
-        Debug.Log( attackingUnit.title + " has damaged " + unitScript.title + " for " + damage);
+
         actionDisplayText.text = 
             attackingUnit.title + " has damaged " + unitScript.title + " for " + damage 
-            + " with " + moveName;
-                                ///+ ". HP "+  unitScript.hp;
+            + " with " + moveScript.title;
+
+        Debug.Log( attackingUnit.title + " has damaged " + unitScript.title + " for " + damage);
     }
 
 

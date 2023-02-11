@@ -1367,9 +1367,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11922709}
     - target: {fileID: 2231407808395461656, guid: 63d1f9c16b94b354f9f2060789a64082, type: 3}
+      propertyPath: heroes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2231407808395461656, guid: 63d1f9c16b94b354f9f2060789a64082, type: 3}
       propertyPath: startCombatButton
       value: 
       objectReference: {fileID: 381268024}
+    - target: {fileID: 2231407808395461656, guid: 63d1f9c16b94b354f9f2060789a64082, type: 3}
+      propertyPath: enemies.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2231407808395461656, guid: 63d1f9c16b94b354f9f2060789a64082, type: 3}
+      propertyPath: heroes.Array.data[0]
+      value: 
+      objectReference: {fileID: 309696244}
+    - target: {fileID: 2231407808395461656, guid: 63d1f9c16b94b354f9f2060789a64082, type: 3}
+      propertyPath: enemies.Array.data[0]
+      value: 
+      objectReference: {fileID: 393077981}
     - target: {fileID: 2231407808395461657, guid: 63d1f9c16b94b354f9f2060789a64082, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1605,6 +1621,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 393077982, guid: 4314d9e56c39b764eb9163d7029789d4, type: 3}
+      propertyPath: damageMod
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7544134627734247588, guid: 4314d9e56c39b764eb9163d7029789d4, type: 3}
       propertyPath: m_Name
       value: Enemy 1
