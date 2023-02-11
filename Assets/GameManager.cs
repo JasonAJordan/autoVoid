@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
             UnitScript currentUnit = attackOrder[counter % attackOrder.Count];
             // int damage = currentUnit.BasicAttack();
             
-            MoveScript moveScript = currentUnit.GetAttack(); 
+            MoveSO moveScript = currentUnit.GetAttack(); 
 
             // I believe I should make a function which uses moveScript's slots and targets values 
             // and dynamicly call "damageUnit" if the unit is in the slot. 
@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
         // Debug.Log(attackOrder);
     }
 
-    public void damageUnit(GameObject unit, UnitScript attackingUnit, MoveScript moveScript){
+    public void damageUnit(GameObject unit, UnitScript attackingUnit, MoveSO moveScript){
         UnitScript unitScript = unit.gameObject.GetComponent<UnitScript>();
 
         int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));

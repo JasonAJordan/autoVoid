@@ -20,7 +20,7 @@ public class UnitScript : MonoBehaviour
     public int slot; 
 
     // Attacking related 
-    public List<MoveScript> moves;
+    public List<MoveSO> moves;
 
     public int actionNumber; 
 
@@ -40,24 +40,24 @@ public class UnitScript : MonoBehaviour
         hpText.text = "" + hp;
     }
 
-    public int BasicAttack(){
-        // return UnityEngine.Random.Range(Convert.ToInt32(attack - 2), attack);
-        return statAttack;
-    }
+    // public int BasicAttack(){
+    //     // return UnityEngine.Random.Range(Convert.ToInt32(attack - 2), attack);
+    //     return statAttack;
+    // }
 
 
     // This will get the attack damage done and slot(s) hit 
     // for now [0,1,2,3], [4 4 - -], [- 5 5 -], [- - 6 6], [7 7 7 -], [- 8 8 8], [ 9 9 9 9]
     // toDo learn C# or equilvant 
     // Also toDo skip move if can't hit anything enemy in a slot; 
-    public MoveScript GetAttack(){
-        MoveScript currentMove = moves[actionNumber % moves.Count];
+    public MoveSO GetAttack(){
+        MoveSO currentMove = moves[actionNumber % moves.Count];
         // if CheckIfAttackIsValid(){
             // this if will check to see if the unit should skip the move 
         //}
         actionNumber++;
 
-        int moveDmg = Convert.ToInt32(Math.Floor(statAttack* currentMove.damageMod));
+        // int moveDmg = Convert.ToInt32(Math.Floor(statAttack* currentMove.damageMod));
         return currentMove;
     }
     // see GetAttack() comment. 
