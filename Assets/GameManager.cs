@@ -63,19 +63,11 @@ public class GameManager : MonoBehaviour
 
             UnitScript currentUnit = attackOrder[counter % attackOrder.Count];
             // int damage = currentUnit.BasicAttack();
+
+            List<GameObject> opposition = currentUnit.enemy ? heroes : enemies; 
             
-            MoveSO moveScript = currentUnit.GetAttack(); 
+            MoveSO moveScript = currentUnit.GetAttack(opposition); 
             executeMove(currentUnit, moveScript);
-
-
-            // I believe I should make a function which uses moveScript's slots and targets values 
-            // and dynamicly call "damageUnit" if the unit is in the slot. 
-
-            // if (currentUnit.enemy){
-            //     damageUnitOld(heroes[0], currentUnit, moveScript);
-            // } else {
-            //     damageUnitOld(enemies[0], currentUnit, moveScript);
-            // }
 
             counter++; 
             actionCounter.text = "Action Number " + counter;
@@ -149,7 +141,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Running Attack for" + attackingUnit.title); 
         if (!attackingUnit.enemy){ // Hero attacking
             List<int> enemySlots = GetEnemySlots(moveScript.slot, moveScript.numOfTargets);
-            // Debug.Log(enemySlots); 
+            // I would need a check to see if there is a unit to be hit so I don't get a out of range bug. 
                 for (int i = 0; i < enemySlots.Count; i++){
                     Debug.Log(enemySlots[i]); 
                     UnitScript eScript = enemies[enemySlots[i]].gameObject.GetComponent<UnitScript>();
