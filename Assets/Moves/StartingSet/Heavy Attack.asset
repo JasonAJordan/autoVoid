@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3d6258e0310cd42937cbb67985555c, type: 3}
   m_Name: Heavy Attack
   m_EditorClassIdentifier: 
-  title: 
-  damageMod: 0
-  critMod: 0
+  title: Heavy Attack
+  damageMod: 1.5
+  critMod: 1
   slot: 0
-  numOfTargets: 0
+  numOfTargets: 1
   chartType: 0
   MoveType: 0
   status: 0

@@ -4,10 +4,13 @@ using UnityEngine;
 using TMPro;
 using System;
 
+
 public class UnitScript : MonoBehaviour
 {
     // general 
     public string title;
+
+    public UnitSO unitInit;
 
     // stats
     public int hp;
@@ -30,8 +33,15 @@ public class UnitScript : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        
+    {   
+        title = unitInit.title;
+        hp = unitInit.hp;
+        speed = unitInit.speed;
+        attackTimes = unitInit.attackTimes;
+        statAttack = unitInit.statAttack;
+        enemy = unitInit.enemy; 
+        moves = unitInit.moves; 
+        GetComponent<SpriteRenderer>().sprite = unitInit.baseArtwork;
     }
 
     // Update is called once per frame

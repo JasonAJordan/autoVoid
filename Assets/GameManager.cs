@@ -65,15 +65,17 @@ public class GameManager : MonoBehaviour
             // int damage = currentUnit.BasicAttack();
             
             MoveSO moveScript = currentUnit.GetAttack(); 
+            executeMove(currentUnit, moveScript);
+
 
             // I believe I should make a function which uses moveScript's slots and targets values 
             // and dynamicly call "damageUnit" if the unit is in the slot. 
 
-            if (currentUnit.enemy){
-                damageUnit(heroes[0], currentUnit, moveScript);
-            } else {
-                damageUnit(enemies[0], currentUnit, moveScript);
-            }
+            // if (currentUnit.enemy){
+            //     damageUnitOld(heroes[0], currentUnit, moveScript);
+            // } else {
+            //     damageUnitOld(enemies[0], currentUnit, moveScript);
+            // }
 
             counter++; 
             actionCounter.text = "Action Number " + counter;
@@ -89,17 +91,20 @@ public class GameManager : MonoBehaviour
     }   
 
     // checks to see if either all hero or enemy unit hp total is less than 0
+    // This would need a update 
     public void checkAllUnitHPs(){
         // I will need to learn how to make a proper unity c# loop to map ListGameObjects -> List/Set [hp]
         UnitScript h1Script = heroes[0].gameObject.GetComponent<UnitScript>();
+        UnitScript h2Script = heroes[1].gameObject.GetComponent<UnitScript>();
         UnitScript e1Script = enemies[0].gameObject.GetComponent<UnitScript>();
+
 
         if (e1Script.hp <=0){
             toggleCombat();
             actionDisplayText.text = "First enemy defeated";
         }
         // This would house all the hp pool
-        if ((h1Script.hp <= 0) ){
+        if ((h1Script.hp <= 0 && h2Script.hp <= 0) ){
             toggleCombat();
             actionDisplayText.text = "Party all K.O. Combat ended.";
         }
@@ -140,18 +145,80 @@ public class GameManager : MonoBehaviour
         // Debug.Log(attackOrder);
     }
 
-    public void damageUnit(GameObject unit, UnitScript attackingUnit, MoveSO moveScript){
-        UnitScript unitScript = unit.gameObject.GetComponent<UnitScript>();
+    public void executeMove(UnitScript attackingUnit, MoveSO moveScript){
+        Debug.Log("Running Attack for" + attackingUnit.title); 
+        if (!attackingUnit.enemy){ // Hero attacking
+            List<int> enemySlots = GetEnemySlots(moveScript.slot, moveScript.numOfTargets);
+            // Debug.Log(enemySlots); 
+                for (int i = 0; i < enemySlots.Count; i++){
+                    Debug.Log(enemySlots[i]); 
+                    UnitScript eScript = enemies[enemySlots[i]].gameObject.GetComponent<UnitScript>();
+                    damageUnit(eScript, attackingUnit, moveScript);
+                }
+            
+        } else {
+            List<int> heroSlots = GetHeroSlots(moveScript.slot, moveScript.numOfTargets);
+                for (int i =0; i < heroSlots.Count; i++){
+                    Debug.Log(heroSlots[i]); 
+                    UnitScript eScript = heroes[heroSlots[i]].gameObject.GetComponent<UnitScript>();
+                    damageUnit(eScript, attackingUnit, moveScript);
+                }
+        }
+
+    }
+
+    // Not sure if it's the best to keep these two the same (GetEnemySlots && GetHeroSlots) or seperate 
+    private List<int> GetEnemySlots(int slot, int targets){
+        List<int> returnList = new List<int>();
+        if (slot <= 3 && targets == 1){
+            returnList.Add(slot);
+            return returnList;
+        } else if (slot == 4 && targets == 1){
+            returnList.Add(Random.Range(0,2)); // 1 or 2
+            return returnList;
+        }
+        return returnList;
+    }
+
+    private List<int> GetHeroSlots(int slot, int targets){
+        List<int> returnList = new List<int>();
+        if (slot <= 3 && targets == 1){
+            returnList.Add(slot);
+            return returnList;
+        } else if (slot == 4 && targets == 1){
+            returnList.Add(Random.Range(0,2)); // 1 or 2
+            return returnList;
+        }
+        return returnList;
+    }
+
+
+    public void damageUnit(UnitScript unitBeingHit, UnitScript attackingUnit, MoveSO moveScript){
+        //UnitScript unitScript = unit.gameObject.GetComponent<UnitScript>();
 
         int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));
-        unitScript.TakeDamage(damage);
+        unitBeingHit.TakeDamage(damage);
 
-
+        // action Display will have to move away from here when I get multi target hits runnig. 
         actionDisplayText.text = 
-            attackingUnit.title + " has damaged " + unitScript.title + " for " + damage 
+            attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage 
             + " with " + moveScript.title;
 
-        Debug.Log( attackingUnit.title + " has damaged " + unitScript.title + " for " + damage);
+        Debug.Log( attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage);
+    }
+
+        public void damageUnitOld(GameObject unit, UnitScript attackingUnit, MoveSO moveScript){
+        UnitScript unitBeingHit = unit.gameObject.GetComponent<UnitScript>();
+
+        int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));
+        unitBeingHit.TakeDamage(damage);
+
+        // action Display will have to move away from here when I get multi target hits runnig. 
+        actionDisplayText.text = 
+            attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage 
+            + " with " + moveScript.title;
+
+        Debug.Log( attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage);
     }
 
 

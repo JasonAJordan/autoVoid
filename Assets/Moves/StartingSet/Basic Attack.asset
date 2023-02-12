@@ -15,7 +15,7 @@ MonoBehaviour:
   title: Basic Attack
   damageMod: 1
   critMod: 1
-  slot: 1
+  slot: 0
   numOfTargets: 1
   chartType: 0
   MoveType: 0
