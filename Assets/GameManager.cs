@@ -85,18 +85,17 @@ public class GameManager : MonoBehaviour
     // checks to see if either all hero or enemy unit hp total is less than 0
     // This would need a update 
     public void checkAllUnitHPs(){
-        // I will need to learn how to make a proper unity c# loop to map ListGameObjects -> List/Set [hp]
-        UnitScript h1Script = heroes[0].gameObject.GetComponent<UnitScript>();
-        UnitScript h2Script = heroes[1].gameObject.GetComponent<UnitScript>();
-        UnitScript e1Script = enemies[0].gameObject.GetComponent<UnitScript>();
 
+        bool enemiesHPsCheck = enemies.Select(hero => hero.gameObject.GetComponent<UnitScript>().hp ).ToList().All( hp => hp <= 0);
 
-        if (e1Script.hp <=0){
+        bool herosHPsCheck = heroes.Select(hero => hero.gameObject.GetComponent<UnitScript>().hp ).ToList().All( hp => hp <= 0);
+
+        if (enemiesHPsCheck){
             toggleCombat();
             actionDisplayText.text = "First enemy defeated";
         }
         // This would house all the hp pool
-        if ((h1Script.hp <= 0 && h2Script.hp <= 0) ){
+        if (herosHPsCheck){
             toggleCombat();
             actionDisplayText.text = "Party all K.O. Combat ended.";
         }
@@ -199,7 +198,7 @@ public class GameManager : MonoBehaviour
         Debug.Log( attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage);
     }
 
-        public void damageUnitOld(GameObject unit, UnitScript attackingUnit, MoveSO moveScript){
+    public void damageUnitOld(GameObject unit, UnitScript attackingUnit, MoveSO moveScript){
         UnitScript unitBeingHit = unit.gameObject.GetComponent<UnitScript>();
 
         int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));
