@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
 
 
     // Battle Settings 
-
-    public int round; 
+    public int turn; 
+    public int turnLength; 
 
     // public GameObject hero1;
     // public GameObject hero2;
@@ -42,9 +42,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        round = 1;
-        // Maybe I can feed in only the unitScripts here
-        // createAttackOrder(hero1, hero2, Enemy1);
+        turn = 1;
+
+        findTurnLength(); 
+
         createAttackOrder(heroes, enemies);
     }
 
@@ -71,6 +72,8 @@ public class GameManager : MonoBehaviour
 
             counter++; 
             actionCounter.text = "Action Number " + counter;
+            // Attack order will need to update for priority moves
+           
         }
         
 
@@ -86,7 +89,7 @@ public class GameManager : MonoBehaviour
     // This would need a update 
     public void checkAllUnitHPs(){
 
-        bool enemiesHPsCheck = enemies.Select(hero => hero.gameObject.GetComponent<UnitScript>().hp ).ToList().All( hp => hp <= 0);
+        bool enemiesHPsCheck = enemies.Select(enemy => enemy.gameObject.GetComponent<UnitScript>().hp ).ToList().All( hp => hp <= 0);
 
         bool herosHPsCheck = heroes.Select(hero => hero.gameObject.GetComponent<UnitScript>().hp ).ToList().All( hp => hp <= 0);
 
@@ -101,39 +104,41 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void findTurnLength(){
+        int enemiesAttacks = enemies.Select(enemy => enemy.gameObject.GetComponent<UnitScript>().attackTimes ).ToList().Aggregate(0, (total, next) => total + next);
+
+        int herosAttacks= heroes.Select(hero => hero.gameObject.GetComponent<UnitScript>().attackTimes ).ToList().Aggregate(0, (total, next) => total + next);
+
+        turnLength = enemiesAttacks + herosAttacks;
+
+    }
+
     // This might be a huge fail by me, I'm going to google unity turn base rpg attack speed
     
     public void createAttackOrder(List<GameObject> heroes, List<GameObject> enemies){
-        
-        // I will need to learn how to make a proper unity c# loop 
-        UnitScript h1Script = heroes[0].gameObject.GetComponent<UnitScript>();
-        // UnitScript h2Script = hero2.gameObject.GetComponent<UnitScript>();
-        UnitScript e1Script = enemies[0].gameObject.GetComponent<UnitScript>();
-        // Debug.Log(h1Script, h2Script);
-        attackOrder.Add(h1Script);
-        // attackOrder.Add(h2Script);
-        attackOrder.Add(e1Script);
+        // Not sure if I should do this in one or two lines
+        attackOrder = new List<UnitScript>();
+        attackOrder = enemies.Select(enemy => enemy.gameObject.GetComponent<UnitScript>()).ToList();
+        List<UnitScript> attacksHeros = heroes.Select(heroes => heroes.gameObject.GetComponent<UnitScript>()).ToList();
+        attackOrder = attackOrder.Concat(attacksHeros).ToList();
 
         attackOrder = attackOrder.OrderBy( w=> w.speed).ToList();
-
-        if (e1Script.attackTimes > 1){
-            for (int i = 1; i < e1Script.attackTimes; i++)
-            {
-                // I need to figure out how to make an object copy and not a ref... or maybe I don't need to because I can use .Insert
-                // e1Script.speed = Random.Range(0,e1Script.speed );
-                // UnitScript e1ScriptX = (UnitScript)e1Script.MemberwiseClone();
-                int maxIdx = attackOrder.IndexOf(e1Script);
-                int idx = Random.Range(0, maxIdx);
-                attackOrder.Insert(idx, e1Script);
-            }
-        }
         attackOrder.Reverse();
 
-        for (int i =0; i< attackOrder.Count; i++){
-            Debug.Log(attackOrder[i].title +" " + attackOrder[i].speed.ToString());
+        List<UnitScript> extraAttacks = new List<UnitScript>();
+        for (int i = 0; i < attackOrder.Count; i++){
+            UnitScript currentUnit = attackOrder[i];
+            if (currentUnit.attackTimes > 1){
+                for (int j = 1; j < currentUnit.attackTimes; j++)
+                {
+                    int maxIdx = extraAttacks.Count;
+                    int idx = Random.Range(0, maxIdx);
+                    extraAttacks.Insert(idx, currentUnit);
+                }
+            }
         }
+        attackOrder = attackOrder.Concat(extraAttacks).ToList(); 
 
-        // Debug.Log(attackOrder);
     }
 
     public void executeMove(UnitScript attackingUnit, MoveSO moveScript){

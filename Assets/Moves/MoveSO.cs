@@ -22,6 +22,14 @@ public class MoveSO : ScriptableObject
     public int numOfTargets; 
 
 
+    // 
+
+    public int priorityLevel;
+
+    public bool limitedPP; 
+    public int powerPoint;
+
+
     // chartType & type of move it is like just damaging, or healing, buffs/debuff
     // these are honestly placeholders for now. I still thinking of maybe having like a AttackScript, HealScript, Buff/Debuff script as childern to MoveScript. 
     public int chartType; 
