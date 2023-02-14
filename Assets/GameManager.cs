@@ -13,10 +13,10 @@ public class GameManager : MonoBehaviour
     public float turnSpeed = 1.0f;
     public float period = 1.0f;
     public int counter = 0;
-
+    public int turn; 
 
     // Battle Settings 
-    public int turn; 
+
     public int turnLength; 
 
     // public GameObject hero1;
@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     // Game UI and related
     public TextMeshProUGUI actionCounter;
+
+    public TextMeshProUGUI turnCounter; 
 
     public GameObject startCombatButton;
 
@@ -72,6 +74,11 @@ public class GameManager : MonoBehaviour
 
             counter++; 
             actionCounter.text = "Action Number " + counter;
+            if (counter % turnLength == 0){
+                turn++; 
+                createAttackOrder(heroes, enemies);
+                turnCounter.text = "Turn: " + turn;
+            }
             // Attack order will need to update for priority moves
            
         }
@@ -139,6 +146,20 @@ public class GameManager : MonoBehaviour
         }
         attackOrder = attackOrder.Concat(extraAttacks).ToList(); 
 
+        List<UnitScript> prior1Attacks = new List<UnitScript>();
+        List<UnitScript> speed0Attacks = new List<UnitScript>();
+        foreach( var unit in attackOrder){
+            List<GameObject> opposition = unit.enemy ? heroes : enemies; 
+            MoveSO moveScript = unit.GetAttack(opposition); 
+            if (moveScript.priorityLevel > 0){
+                prior1Attacks.Add(unit);
+            } else {
+                speed0Attacks.Add(unit);
+            }
+        }
+
+        attackOrder = prior1Attacks.Concat(speed0Attacks).ToList();
+
     }
 
     public void executeMove(UnitScript attackingUnit, MoveSO moveScript){
@@ -200,6 +221,7 @@ public class GameManager : MonoBehaviour
             attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage 
             + " with " + moveScript.title;
 
+        attackingUnit.actionNumber++;
         Debug.Log( attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage);
     }
 

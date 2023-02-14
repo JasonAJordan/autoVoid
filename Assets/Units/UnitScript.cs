@@ -59,7 +59,8 @@ public class UnitScript : MonoBehaviour
     // This will get the attack damage done and slot(s) hit 
     // for now [0,1,2,3], [4 4 - -], [- 5 5 -], [- - 6 6], [7 7 7 -], [- 8 8 8], [ 9 9 9 9]
     // toDo learn C# or equilvant 
-    // Also toDo skip move if can't hit anything enemy in a slot; 
+    // Also toDo make sure this skips if the attack has priority 
+
     public MoveSO GetAttack(List<GameObject> opposition ){
         bool isValidAttack = false; 
         //int[] threeUnits = {0,1,2,4,5,7};
@@ -68,7 +69,6 @@ public class UnitScript : MonoBehaviour
         List<int> twoUnitValid = new List<int>(twoUnits);
         int[] oneUnits = {0,4,7,9};
         List<int> oneUnitValid = new List<int>(oneUnits);
-        // MoveSO dudAttack = CreateDudAttack();
 
         MoveSO currentMove = moves[actionNumber % moves.Count];
         for (int i = 0; i < 4; i++){
@@ -92,7 +92,8 @@ public class UnitScript : MonoBehaviour
             actionNumber++;
             currentMove = moves[actionNumber % moves.Count];
         }
-        actionNumber++;
+        // moving the actionNumber++ to damageUnit() so I can run this check in multi locations; 
+        // actionNumber++;
         return isValidAttack ? currentMove : CreateDudAttack();
     }
 

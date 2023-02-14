@@ -992,7 +992,7 @@ GameObject:
   - component: {fileID: 1841102930}
   - component: {fileID: 1841102929}
   m_Layer: 5
-  m_Name: Round Text
+  m_Name: Round Ticker Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Round: X'
+  m_text: 'Round: 1'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1372,6 +1372,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 393077981}
     - target: {fileID: 2231407808395461656, guid: 63d1f9c16b94b354f9f2060789a64082, type: 3}
+      propertyPath: turnCounter
+      value: 
+      objectReference: {fileID: 1841102929}
+    - target: {fileID: 2231407808395461656, guid: 63d1f9c16b94b354f9f2060789a64082, type: 3}
       propertyPath: actionCounter
       value: 
       objectReference: {fileID: 596969312}
@@ -1587,14 +1591,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
       propertyPath: moves.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
       propertyPath: moves.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 7d1565c6f53523746a0e4029f8b219c6, type: 2}
+      objectReference: {fileID: 11400000, guid: 8708b76e148ac814492e5c490bea20c7, type: 2}
     - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
       propertyPath: moves.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 7d1565c6f53523746a0e4029f8b219c6, type: 2}
+    - target: {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
+      propertyPath: moves.Array.data[2]
       value: 
       objectReference: {fileID: 11400000, guid: b0c73525a659c4e429e628a919bd4198, type: 2}
     - target: {fileID: 5697332505134663049, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}

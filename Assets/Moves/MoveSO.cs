@@ -22,7 +22,7 @@ public class MoveSO : ScriptableObject
     public int numOfTargets; 
 
 
-    // 
+    // priority and other things that will make this game diffrent from DD
 
     public int priorityLevel;
 
