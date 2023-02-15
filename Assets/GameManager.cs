@@ -241,7 +241,8 @@ public class GameManager : MonoBehaviour
         summary.unit = unitBeingHit;
         summary.hpChange = -damage;
         summary.movetype = 0; 
-        
+        // The actionSummary shouldn't need more than 3 secs 
+        Destroy(gameObject, 3);
         return summary;
     }
 
