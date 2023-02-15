@@ -73,6 +73,7 @@ public class UnitScript : MonoBehaviour
         List<int> oneUnitValid = new List<int>(oneUnits);
 
         MoveSO currentMove = moves[actionNumber % moves.Count];
+
         for (int i = 0; i < 4; i++){
             if (opposition.Count == 4){
                 isValidAttack = true;
@@ -90,6 +91,10 @@ public class UnitScript : MonoBehaviour
                     isValidAttack = true;
                     break;
                 }
+            }
+            // This will cause the priority move NOT to go off and NOT select the next move. 
+            if (currentMove.priorityLevel == 1){
+                break; 
             }
             actionNumber++;
             currentMove = moves[actionNumber % moves.Count];

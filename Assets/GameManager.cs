@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
 
             List<GameObject> opposition = currentUnit.enemy ? heroes : enemies; 
             
+            // GetAttack will get the next possible attack. 
             MoveSO moveScript = currentUnit.GetAttack(opposition); 
             executeMove(currentUnit, moveScript);
 
@@ -150,6 +151,9 @@ public class GameManager : MonoBehaviour
         List<UnitScript> speed0Attacks = new List<UnitScript>();
         foreach( var unit in attackOrder){
             List<GameObject> opposition = unit.enemy ? heroes : enemies; 
+            // I believe this will help the "priorty" bug that may happen
+            // next move is on priorty but if it can't attack it will select the next move 
+            // which will be sorted in the right speed. 
             MoveSO moveScript = unit.GetAttack(opposition); 
             if (moveScript.priorityLevel > 0){
                 prior1Attacks.Add(unit);
@@ -166,37 +170,41 @@ public class GameManager : MonoBehaviour
         Debug.Log("Running Attack for" + attackingUnit.title); 
         List<ActionSummary> effectedUnits = new List<ActionSummary>(); 
         if (!attackingUnit.enemy){ // Hero attacking
-            List<int> enemySlots = GetEnemySlots(moveScript.slot, moveScript.numOfTargets);
+            List<int> enemySlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
             // I would need a check to see if there is a unit to be hit so I don't get a out of range bug. 
                 for (int i = 0; i < enemySlots.Count; i++){
-                    Debug.Log(enemySlots[i]); 
+                    // Debug.Log(enemySlots[i]); 
                     UnitScript eScript = enemies[enemySlots[i]].gameObject.GetComponent<UnitScript>();
                     //damageUnit(eScript, attackingUnit, moveScript);
                     effectedUnits.Add(damageSummary(eScript, attackingUnit, moveScript));
                 }
             
         } else {
-            List<int> heroSlots = GetHeroSlots(moveScript.slot, moveScript.numOfTargets);
-                for (int i =0; i < heroSlots.Count; i++){
+            Debug.Log(moveScript.slot);
+            Debug.Log(moveScript.numOfTargets);
+            List<int> heroSlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
+            Debug.Log(heroSlots.Count);
+
+                for (int i = 0; i < heroSlots.Count; i++){
                     Debug.Log(heroSlots[i]); 
                     UnitScript eScript = heroes[heroSlots[i]].gameObject.GetComponent<UnitScript>();
                     //damageUnit(eScript, attackingUnit, moveScript);
                     effectedUnits.Add(damageSummary(eScript, attackingUnit, moveScript));
                 }
         }
-        executeMoveSummaries( attackingUnit,  effectedUnits);
+        executeMoveSummaries( attackingUnit,  effectedUnits, moveScript);
     }
 
-    public void executeMoveSummaries(UnitScript attackingUnit, List<ActionSummary> effectedUnitsSummary){
+    public void executeMoveSummaries(UnitScript attackingUnit, List<ActionSummary> effectedUnitsSummary, MoveSO moveScript){
 
         actionDisplayText.text = "";
-        string tempActionDisplayText = attackingUnit.title;
+        string tempActionDisplayText = attackingUnit.title + " used " + moveScript.title;;
         for (int i = 0; i< effectedUnitsSummary.Count; i++){
             ActionSummary currentUnitSum = effectedUnitsSummary[i];
             // Here I will need to add the "switch statemts for heals, buffs, debuffs etc
             if (currentUnitSum.movetype == 0){
                 currentUnitSum.unit.changeHP(currentUnitSum.hpChange);
-                tempActionDisplayText += actionDisplayText.text + " has damaged " + currentUnitSum.unit.title + " for " + (Mathf.Abs(currentUnitSum.hpChange));
+                tempActionDisplayText += actionDisplayText.text + ". Damaged " + currentUnitSum.unit.title + " for " + (Mathf.Abs(currentUnitSum.hpChange));
             }
 
         }
@@ -205,30 +213,23 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Not sure if it's the best to keep these two the same (GetEnemySlots && GetHeroSlots) or seperate 
-    private List<int> GetEnemySlots(int slot, int targets){
+    // I might/will have to update this for each slot + target combo.... 
+    private List<int> GetSlots(int slot, int targets){
         List<int> returnList = new List<int>();
         if (slot <= 3 && targets == 1){
             returnList.Add(slot);
             return returnList;
         } else if (slot == 4 && targets == 1){
             returnList.Add(Random.Range(0,2)); // 1 or 2
+            return returnList;
+        } else if (slot == 4){
+            returnList.Add(0);
+            returnList.Add(1);
             return returnList;
         }
         return returnList;
     }
 
-    private List<int> GetHeroSlots(int slot, int targets){
-        List<int> returnList = new List<int>();
-        if (slot <= 3 && targets == 1){
-            returnList.Add(slot);
-            return returnList;
-        } else if (slot == 4 && targets == 1){
-            returnList.Add(Random.Range(0,2)); // 1 or 2
-            return returnList;
-        }
-        return returnList;
-    }
 
     
     public ActionSummary damageSummary(UnitScript unitBeingHit, UnitScript attackingUnit, MoveSO moveScript){
