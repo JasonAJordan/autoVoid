@@ -63,7 +63,7 @@ public class UnitScript : MonoBehaviour
     // toDo learn C# or equilvant 
     // Also toDo make sure this skips if the attack has priority 
 
-    public MoveSO GetAttack(List<GameObject> opposition ){
+    public MoveSO GetAttack(List<GameObject> opposition, bool fromCreateAttackOrder ){
         bool isValidAttack = false; 
         //int[] threeUnits = {0,1,2,4,5,7};
         //List<int> threeUnitValid = new List<int>(threeUnits);
@@ -93,7 +93,9 @@ public class UnitScript : MonoBehaviour
                 }
             }
             // This will cause the priority move NOT to go off and NOT select the next move. 
-            if (currentMove.priorityLevel == 1){
+            // This is so if a priority moves fails, the unit will not act at a higher speed tier with a "stronger" move. 
+            // Also it adds a draw back to priority moves. 
+            if (currentMove.priorityLevel == 1 && !fromCreateAttackOrder){
                 break; 
             }
             actionNumber++;

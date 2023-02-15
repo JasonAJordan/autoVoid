@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
             List<GameObject> opposition = currentUnit.enemy ? heroes : enemies; 
             
             // GetAttack will get the next possible attack. 
-            MoveSO moveScript = currentUnit.GetAttack(opposition); 
+            MoveSO moveScript = currentUnit.GetAttack(opposition, false); 
             executeMove(currentUnit, moveScript);
 
             counter++; 
@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour
             // I believe this will help the "priorty" bug that may happen
             // next move is on priorty but if it can't attack it will select the next move 
             // which will be sorted in the right speed. 
-            MoveSO moveScript = unit.GetAttack(opposition); 
+            MoveSO moveScript = unit.GetAttack(opposition, true); 
             if (moveScript.priorityLevel > 0){
                 prior1Attacks.Add(unit);
             } else {
