@@ -14,6 +14,7 @@ public class UnitScript : MonoBehaviour
 
     // stats
     public int hp;
+    public int maxHp;
     public int speed;
     public int attackTimes; 
 
@@ -36,6 +37,7 @@ public class UnitScript : MonoBehaviour
     {   
         title = unitInit.title;
         hp = unitInit.hp;
+        maxHp = unitInit.hp;
         speed = unitInit.speed;
         attackTimes = unitInit.attackTimes;
         statAttack = unitInit.statAttack;
@@ -115,6 +117,13 @@ public class UnitScript : MonoBehaviour
     public void TakeDamage(int damage){
         int newHp = hp - damage;
         hp = newHp < 0 ? 0 : newHp;
+
+    }
+
+    public void changeHP(int hpChange){
+        int newHp = hp + hpChange;
+        hp = newHp < 0 ? 0 : newHp;
+        hp = hp > maxHp ? maxHp : hp; 
 
     }
 }

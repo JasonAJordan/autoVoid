@@ -164,13 +164,15 @@ public class GameManager : MonoBehaviour
 
     public void executeMove(UnitScript attackingUnit, MoveSO moveScript){
         Debug.Log("Running Attack for" + attackingUnit.title); 
+        List<ActionSummary> effectedUnits = new List<ActionSummary>(); 
         if (!attackingUnit.enemy){ // Hero attacking
             List<int> enemySlots = GetEnemySlots(moveScript.slot, moveScript.numOfTargets);
             // I would need a check to see if there is a unit to be hit so I don't get a out of range bug. 
                 for (int i = 0; i < enemySlots.Count; i++){
                     Debug.Log(enemySlots[i]); 
                     UnitScript eScript = enemies[enemySlots[i]].gameObject.GetComponent<UnitScript>();
-                    damageUnit(eScript, attackingUnit, moveScript);
+                    //damageUnit(eScript, attackingUnit, moveScript);
+                    effectedUnits.Add(damageSummary(eScript, attackingUnit, moveScript));
                 }
             
         } else {
@@ -178,9 +180,28 @@ public class GameManager : MonoBehaviour
                 for (int i =0; i < heroSlots.Count; i++){
                     Debug.Log(heroSlots[i]); 
                     UnitScript eScript = heroes[heroSlots[i]].gameObject.GetComponent<UnitScript>();
-                    damageUnit(eScript, attackingUnit, moveScript);
+                    //damageUnit(eScript, attackingUnit, moveScript);
+                    effectedUnits.Add(damageSummary(eScript, attackingUnit, moveScript));
                 }
         }
+        executeMoveSummaries( attackingUnit,  effectedUnits);
+    }
+
+    public void executeMoveSummaries(UnitScript attackingUnit, List<ActionSummary> effectedUnitsSummary){
+
+        actionDisplayText.text = "";
+        string tempActionDisplayText = attackingUnit.title;
+        for (int i = 0; i< effectedUnitsSummary.Count; i++){
+            ActionSummary currentUnitSum = effectedUnitsSummary[i];
+            // Here I will need to add the "switch statemts for heals, buffs, debuffs etc
+            if (currentUnitSum.movetype == 0){
+                currentUnitSum.unit.changeHP(currentUnitSum.hpChange);
+                tempActionDisplayText += actionDisplayText.text + " has damaged " + currentUnitSum.unit.title + " for " + (Mathf.Abs(currentUnitSum.hpChange));
+            }
+
+        }
+        actionDisplayText.text = tempActionDisplayText;
+        attackingUnit.actionNumber++;
 
     }
 
@@ -209,35 +230,21 @@ public class GameManager : MonoBehaviour
         return returnList;
     }
 
-
-    public void damageUnit(UnitScript unitBeingHit, UnitScript attackingUnit, MoveSO moveScript){
-        //UnitScript unitScript = unit.gameObject.GetComponent<UnitScript>();
-
+    
+    public ActionSummary damageSummary(UnitScript unitBeingHit, UnitScript attackingUnit, MoveSO moveScript){
         int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));
-        unitBeingHit.TakeDamage(damage);
+        // unitBeingHit.TakeDamage(damage);
+        GameObject gameObject = new GameObject("ActionSummary");
+        ActionSummary summary = gameObject.AddComponent<ActionSummary>();
 
-        // action Display will have to move away from here when I get multi target hits runnig. 
-        actionDisplayText.text = 
-            attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage 
-            + " with " + moveScript.title;
-
-        attackingUnit.actionNumber++;
-        Debug.Log( attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage);
+        summary.unit = unitBeingHit;
+        summary.hpChange = -damage;
+        summary.movetype = 0; 
+        
+        return summary;
     }
 
-    public void damageUnitOld(GameObject unit, UnitScript attackingUnit, MoveSO moveScript){
-        UnitScript unitBeingHit = unit.gameObject.GetComponent<UnitScript>();
-
-        int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));
-        unitBeingHit.TakeDamage(damage);
-
-        // action Display will have to move away from here when I get multi target hits runnig. 
-        actionDisplayText.text = 
-            attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage 
-            + " with " + moveScript.title;
-
-        Debug.Log( attackingUnit.title + " has damaged " + unitBeingHit.title + " for " + damage);
-    }
+ 
 
 
 

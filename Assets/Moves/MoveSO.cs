@@ -9,7 +9,12 @@ public class MoveSO : ScriptableObject
     public string title;
 
     // kind of considering renaming this into just modifier for heals, however a skill maybe able to damage and heal... 
+    public bool isDamage; 
     public float damageMod; 
+
+    public bool isHeal;
+
+    public float healMod;
 
     public float critMod; 
 
@@ -34,7 +39,8 @@ public class MoveSO : ScriptableObject
     // these are honestly placeholders for now. I still thinking of maybe having like a AttackScript, HealScript, Buff/Debuff script as childern to MoveScript. 
     public int chartType; 
 
-    public int MoveType; 
+    // enum MoveType {damage, heal, dot}
+    // public int MoveType; 
 
     // Worry about these later
 

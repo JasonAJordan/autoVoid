@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: quick Slash
   m_EditorClassIdentifier: 
   title: Quick Slash
+  isDamage: 0
   damageMod: 1
+  isHeal: 0
+  healMod: 0
   critMod: 1
-  slot: 1
+  slot: 0
   numOfTargets: 1
   priorityLevel: 1
   limitedPP: 0
   powerPoint: 0
   chartType: 0
-  MoveType: 0
   status: 0
   statusRate: 0
