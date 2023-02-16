@@ -28,6 +28,11 @@ public class UnitScript : MonoBehaviour
 
     public int actionNumber; 
 
+    // Buffs, Debuffs, DOTS
+
+    public List<StatusSO> statues; 
+
+
     // UI related
 
     public TextMeshProUGUI hpText;
@@ -43,6 +48,7 @@ public class UnitScript : MonoBehaviour
         statAttack = unitInit.statAttack;
         enemy = unitInit.enemy; 
         moves = unitInit.moves; 
+        statues = unitInit.statuses;
         GetComponent<SpriteRenderer>().sprite = unitInit.baseArtwork;
     }
 
@@ -71,7 +77,8 @@ public class UnitScript : MonoBehaviour
         List<int> twoUnitValid = new List<int>(twoUnits);
         int[] oneUnits = {0,4,7,9};
         List<int> oneUnitValid = new List<int>(oneUnits);
-
+        
+        Debug.Log(title + moves.Count);
         MoveSO currentMove = moves[actionNumber % moves.Count];
 
         for (int i = 0; i < 4; i++){

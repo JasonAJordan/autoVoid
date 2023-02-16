@@ -16,6 +16,8 @@ public class UnitSO : ScriptableObject
     public bool enemy; 
     public List<MoveSO> moves;
 
+    public List<StatusSO> statuses; 
+
     public Sprite baseArtwork; 
 
 }

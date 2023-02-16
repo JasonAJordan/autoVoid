@@ -48,13 +48,20 @@ MonoBehaviour:
   turnSpeed: 1
   period: 0.1
   counter: 0
-  round: 0
-  hero1: {fileID: 151664743345352176, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
-  hero2: {fileID: 1020232076470374881, guid: 98d280076f0811a4da7e8ec35c2e8b20, type: 3}
-  hero3: {fileID: 0}
-  hero4: {fileID: 0}
-  enemy1: {fileID: 0}
-  attackOrder: []
+  turn: 1
+  turnLength: 3
+  heroes:
+  - {fileID: 5697332505134663049, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
+  - {fileID: 0}
+  enemies:
+  - {fileID: 0}
+  attackOrder:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 5697332505134663048, guid: a679d40a9ddfe8344ada386c09eb49de, type: 3}
+  - {fileID: 0}
   actionCounter: {fileID: 0}
+  turnCounter: {fileID: 0}
   startCombatButton: {fileID: 0}
   actionDisplayText: {fileID: 0}
+  etcDisplayText: {fileID: 0}

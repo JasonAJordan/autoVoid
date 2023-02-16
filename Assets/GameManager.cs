@@ -40,20 +40,22 @@ public class GameManager : MonoBehaviour
     public GameObject startCombatButton;
 
     public TextMeshProUGUI actionDisplayText; 
+    // temp UI
+    public TextMeshProUGUI etcDisplayText; 
 
     // Start is called before the first frame update
     void Start()
     {
         turn = 1;
-
         findTurnLength(); 
-
         createAttackOrder(heroes, enemies);
+
     }
 
     // Update is called once per frame
     void Update()
-    { if (battleLive){
+    { 
+    if (battleLive){
         startCombatButton.SetActive (false);
 
         checkAllUnitHPs();
@@ -62,16 +64,23 @@ public class GameManager : MonoBehaviour
  
         // An action step 
         if (period >= turnSpeed) {
+            // clear any old text
+            etcDisplayText.text = "";
+
             period = period - turnSpeed;
 
             UnitScript currentUnit = attackOrder[counter % attackOrder.Count];
             // int damage = currentUnit.BasicAttack();
+
+
 
             List<GameObject> opposition = currentUnit.enemy ? heroes : enemies; 
             
             // GetAttack will get the next possible attack. 
             MoveSO moveScript = currentUnit.GetAttack(opposition, false); 
             executeMove(currentUnit, moveScript);
+
+            executeStatus(currentUnit); 
 
             counter++; 
             actionCounter.text = "Action Number " + counter;
@@ -167,28 +176,21 @@ public class GameManager : MonoBehaviour
     }
 
     public void executeMove(UnitScript attackingUnit, MoveSO moveScript){
-        Debug.Log("Running Attack for" + attackingUnit.title); 
+        // Debug.Log("Running Attack for" + attackingUnit.title); 
         List<ActionSummary> effectedUnits = new List<ActionSummary>(); 
         if (!attackingUnit.enemy){ // Hero attacking
             List<int> enemySlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
             // I would need a check to see if there is a unit to be hit so I don't get a out of range bug. 
-                for (int i = 0; i < enemySlots.Count; i++){
-                    // Debug.Log(enemySlots[i]); 
+                for (int i = 0; i < enemySlots.Count; i++){ 
                     UnitScript eScript = enemies[enemySlots[i]].gameObject.GetComponent<UnitScript>();
-                    //damageUnit(eScript, attackingUnit, moveScript);
+
                     effectedUnits.Add(damageSummary(eScript, attackingUnit, moveScript));
                 }
             
         } else {
-            Debug.Log(moveScript.slot);
-            Debug.Log(moveScript.numOfTargets);
             List<int> heroSlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
-            Debug.Log(heroSlots.Count);
-
                 for (int i = 0; i < heroSlots.Count; i++){
-                    Debug.Log(heroSlots[i]); 
                     UnitScript eScript = heroes[heroSlots[i]].gameObject.GetComponent<UnitScript>();
-                    //damageUnit(eScript, attackingUnit, moveScript);
                     effectedUnits.Add(damageSummary(eScript, attackingUnit, moveScript));
                 }
         }
@@ -212,6 +214,23 @@ public class GameManager : MonoBehaviour
         attackingUnit.actionNumber++;
 
     }
+
+    public void executeStatus (UnitScript unit){
+        Debug.Log("Running Statuses" + unit.title); 
+
+        for (int i  = 0; i< unit.statues.Count; i++){
+            StatusSO status = unit.statues[i];
+            unit.changeHP(status.hpChange);
+            status.actionsTurnsRemaining = status.actionsTurnsRemaining - 1;
+            etcDisplayText.text = unit.title + " took " + status.hpChange + " from " + status.title;
+            if (status.actionsTurnsRemaining == 0 ){
+                unit.statues.RemoveAt(i);
+                i--;
+            }
+        }
+
+    }
+    
 
     // I might/will have to update this for each slot + target combo.... 
     private List<int> GetSlots(int slot, int targets){
@@ -247,7 +266,6 @@ public class GameManager : MonoBehaviour
     }
 
  
-
 
 
     // I may not ever need this if each type of attack hit X space
