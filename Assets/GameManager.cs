@@ -60,14 +60,18 @@ public class GameManager : MonoBehaviour
 
         checkAllUnitHPs();
 
+
         period += Time.deltaTime;
  
         // An action step 
         if (period >= turnSpeed) {
             // clear any old text
             etcDisplayText.text = "";
-
             period = period - turnSpeed;
+
+            // run any test that are need for a new turn
+            checkAllUnitStatus();
+
 
             UnitScript currentUnit = attackOrder[counter % attackOrder.Count];
             // int damage = currentUnit.BasicAttack();
@@ -119,6 +123,17 @@ public class GameManager : MonoBehaviour
             toggleCombat();
             actionDisplayText.text = "Party all K.O. Combat ended.";
         }
+    }
+
+    public void checkAllUnitStatus(){
+        foreach (GameObject enemy in enemies){
+            enemy.gameObject.GetComponent<UnitScript>().UpdateUnitStatus();
+        }
+
+        foreach (GameObject hero in heroes){
+            hero.gameObject.GetComponent<UnitScript>().UpdateUnitStatus();
+        }
+
     }
 
     public void findTurnLength(){
@@ -216,7 +231,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void executeStatus (UnitScript unit){
-        Debug.Log("Running Statuses" + unit.title); 
+        // Debug.Log("Running Statuses" + unit.title); 
 
         for (int i  = 0; i< unit.statues.Count; i++){
             StatusSO status = unit.statues[i];
@@ -225,6 +240,10 @@ public class GameManager : MonoBehaviour
             etcDisplayText.text = unit.title + " took " + status.hpChange + " from " + status.title;
             if (status.actionsTurnsRemaining == 0 ){
                 unit.statues.RemoveAt(i);
+                Transform statusRender = unit.transform.Find(status.title);
+                if (statusRender){
+                    statusRender.GetComponent<SpriteRenderer>().enabled = false;
+                }
                 i--;
             }
         }

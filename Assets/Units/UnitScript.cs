@@ -50,18 +50,34 @@ public class UnitScript : MonoBehaviour
         moves = unitInit.moves; 
         statues = unitInit.statuses;
         GetComponent<SpriteRenderer>().sprite = unitInit.baseArtwork;
+
+        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         hpText.text = "" + hp;
+
+
     }
 
-    // public int BasicAttack(){
-    //     // return UnityEngine.Random.Range(Convert.ToInt32(attack - 2), attack);
-    //     return statAttack;
-    // }
+    // For now we will be only using "blight"
+    public void UpdateUnitStatus(){
+        Debug.Log(title + statues.Count);
+        foreach (StatusSO status in statues){
+            Debug.Log("testing 2");
+            Debug.Log(status.title);
+            if (status.title == "BlightTest"){
+            Transform blitTest = transform.Find("BlightTest");
+            if (blitTest){
+                blitTest.GetComponent<SpriteRenderer>().enabled = true;
+            }
+            }
+        }
+
+    }
 
 
     // This will get the attack damage done and slot(s) hit 
@@ -70,6 +86,13 @@ public class UnitScript : MonoBehaviour
     // Also toDo make sure this skips if the attack has priority 
 
     public MoveSO GetAttack(List<GameObject> opposition, bool fromCreateAttackOrder ){
+        // testing
+
+
+
+
+
+
         bool isValidAttack = false; 
         //int[] threeUnits = {0,1,2,4,5,7};
         //List<int> threeUnitValid = new List<int>(threeUnits);
@@ -78,7 +101,7 @@ public class UnitScript : MonoBehaviour
         int[] oneUnits = {0,4,7,9};
         List<int> oneUnitValid = new List<int>(oneUnits);
         
-        Debug.Log(title + moves.Count);
+        // Debug.Log(title + moves.Count);
         MoveSO currentMove = moves[actionNumber % moves.Count];
 
         for (int i = 0; i < 4; i++){
