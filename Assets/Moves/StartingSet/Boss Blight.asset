@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f3d6258e0310cd42937cbb67985555c, type: 3}
-  m_Name: quick Slash
+  m_Name: Boss Blight
   m_EditorClassIdentifier: 
-  title: Quick Slash
-  isDamage: 1
+  title: Boss Blight
+  isDamage: 0
   damageMod: 1
   isHeal: 0
   healMod: 0
   critMod: 1
-  isDot: 0
-  dotStatusScriptableObject: {fileID: 0}
-  slot: 0
+  isDot: 1
+  dotStatusScriptableObject: {fileID: 11400000, guid: 9abd480e17dc70b4896c1d0f02c573cf, type: 2}
+  slot: 4
   numOfTargets: 1
-  priorityLevel: 1
+  priorityLevel: 0
   limitedPP: 0
   powerPoint: 0
   chartType: 0

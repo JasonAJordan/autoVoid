@@ -199,14 +199,14 @@ public class GameManager : MonoBehaviour
                 for (int i = 0; i < enemySlots.Count; i++){ 
                     UnitScript eScript = enemies[enemySlots[i]].gameObject.GetComponent<UnitScript>();
 
-                    effectedUnits.Add(damageSummary(eScript, attackingUnit, moveScript));
+                    effectedUnits.Add(unitActionSummary(eScript, attackingUnit, moveScript));
                 }
             
         } else {
             List<int> heroSlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
                 for (int i = 0; i < heroSlots.Count; i++){
                     UnitScript eScript = heroes[heroSlots[i]].gameObject.GetComponent<UnitScript>();
-                    effectedUnits.Add(damageSummary(eScript, attackingUnit, moveScript));
+                    effectedUnits.Add(unitActionSummary(eScript, attackingUnit, moveScript));
                 }
         }
         executeMoveSummaries( attackingUnit,  effectedUnits, moveScript);
@@ -219,9 +219,13 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i< effectedUnitsSummary.Count; i++){
             ActionSummary currentUnitSum = effectedUnitsSummary[i];
             // Here I will need to add the "switch statemts for heals, buffs, debuffs etc
-            if (currentUnitSum.movetype == 0){
+            if (currentUnitSum.isDamage){
                 currentUnitSum.unit.changeHP(currentUnitSum.hpChange);
                 tempActionDisplayText += actionDisplayText.text + ". Damaged " + currentUnitSum.unit.title + " for " + (Mathf.Abs(currentUnitSum.hpChange));
+            }
+            if (currentUnitSum.isDot){
+                Debug.Log("is dot");
+                currentUnitSum.unit.addStatus(currentUnitSum.dotStatusScriptableObject);
             }
 
         }
@@ -270,15 +274,25 @@ public class GameManager : MonoBehaviour
 
 
     
-    public ActionSummary damageSummary(UnitScript unitBeingHit, UnitScript attackingUnit, MoveSO moveScript){
-        int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));
-        // unitBeingHit.TakeDamage(damage);
+    public ActionSummary unitActionSummary(UnitScript unitBeingHit, UnitScript attackingUnit, MoveSO moveScript){
+        
         GameObject gameObject = new GameObject("ActionSummary");
         ActionSummary summary = gameObject.AddComponent<ActionSummary>();
-
         summary.unit = unitBeingHit;
-        summary.hpChange = -damage;
-        summary.movetype = 0; 
+
+
+        if (moveScript.isDamage){
+            int damage =  System.Convert.ToInt32(System.Math.Floor(attackingUnit.statAttack* moveScript.damageMod));
+            summary.hpChange = -damage;
+            summary.isDamage = true; 
+        }
+
+        if (moveScript.isDot){
+            summary.isDot = true; 
+            summary.dotStatusScriptableObject = moveScript.dotStatusScriptableObject;
+        }
+
+
         // The actionSummary shouldn't need more than 3 secs 
         Destroy(gameObject, 3);
         return summary;

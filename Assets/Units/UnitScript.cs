@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
-
+using System.Linq;
 
 public class UnitScript : MonoBehaviour
 {
@@ -67,7 +67,6 @@ public class UnitScript : MonoBehaviour
     public void UpdateUnitStatus(){
         Debug.Log(title + statues.Count);
         foreach (StatusSO status in statues){
-            Debug.Log("testing 2");
             Debug.Log(status.title);
             if (status.title == "BlightTest"){
             Transform blitTest = transform.Find("BlightTest");
@@ -161,6 +160,17 @@ public class UnitScript : MonoBehaviour
         int newHp = hp + hpChange;
         hp = newHp < 0 ? 0 : newHp;
         hp = hp > maxHp ? maxHp : hp; 
+    }
 
+    public void addStatus(StatusSO status){
+        List <StatusSO> newStatues = (from s in statues
+            where s.title != status.title
+            select s).ToList();
+        StatusSO newStatus = ScriptableObject.Instantiate<StatusSO>(status);
+        // I should fi
+        // newStatus = status;
+        newStatues.Add(newStatus);
+        statues = newStatues;
+        UpdateUnitStatus();
     }
 }

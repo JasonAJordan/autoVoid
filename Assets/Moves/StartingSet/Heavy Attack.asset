@@ -13,11 +13,18 @@ MonoBehaviour:
   m_Name: Heavy Attack
   m_EditorClassIdentifier: 
   title: Heavy Attack
+  isDamage: 1
   damageMod: 1.5
+  isHeal: 0
+  healMod: 0
   critMod: 1
+  isDot: 0
+  dotStatusScriptableObject: {fileID: 0}
   slot: 0
   numOfTargets: 1
+  priorityLevel: 0
+  limitedPP: 0
+  powerPoint: 0
   chartType: 0
-  MoveType: 0
   status: 0
   statusRate: 0

@@ -18,7 +18,9 @@ public class MoveSO : ScriptableObject
 
     public float critMod; 
 
-    // There will be two types of 
+    public bool isDot;
+
+    public StatusSO dotStatusScriptableObject; 
 
     // This will get the attack damage done and slot(s) hit 
     // for now [0,1,2,3], [4 4 - -], [- 5 5 -], [- - 6 6], [7 7 7 -], [- 8 8 8], [ 9 9 9 9]

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Let's not use this anymore 
 public class StatusScript : MonoBehaviour
 {
     // common
