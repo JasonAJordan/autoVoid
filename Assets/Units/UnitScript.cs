@@ -35,6 +35,7 @@ public class UnitScript : MonoBehaviour
 
     // UI related
 
+    public GameObject UnitStatus;
     public TextMeshProUGUI hpText;
 
     // Start is called before the first frame update
@@ -68,12 +69,12 @@ public class UnitScript : MonoBehaviour
         Debug.Log(title + statues.Count);
         foreach (StatusSO status in statues){
             Debug.Log(status.title);
-            if (status.title == "BlightTest"){
-            Transform blitTest = transform.Find("BlightTest");
-            if (blitTest){
-                blitTest.GetComponent<SpriteRenderer>().enabled = true;
-            }
-            }
+            // if (status.title == "BlightTest"){
+            // Transform blitTest = transform.Find("BlightTest");
+            // if (blitTest){
+            //     blitTest.GetComponent<SpriteRenderer>().enabled = true;
+            // }
+            // }
         }
 
     }
@@ -167,10 +168,16 @@ public class UnitScript : MonoBehaviour
             where s.title != status.title
             select s).ToList();
         StatusSO newStatus = ScriptableObject.Instantiate<StatusSO>(status);
-        // I should fi
-        // newStatus = status;
+
+        // This way might be overkill... 
+        GameObject newStatusGameObject = ScriptableObject.Instantiate<GameObject>(UnitStatus, transform.position, Quaternion.identity);
+        newStatusGameObject.GetComponent<SpriteRenderer>().sprite = status.baseArtwork;
+        newStatusGameObject.transform.Translate(0, .9f, 0);
+        newStatusGameObject.transform.localScale -= new Vector3(.16f,.16f,0);
+        UnitStatus = newStatusGameObject;
+
         newStatues.Add(newStatus);
         statues = newStatues;
-        UpdateUnitStatus();
+        // UpdateUnitStatus();
     }
 }

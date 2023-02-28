@@ -224,7 +224,6 @@ public class GameManager : MonoBehaviour
                 tempActionDisplayText += actionDisplayText.text + ". Damaged " + currentUnitSum.unit.title + " for " + (Mathf.Abs(currentUnitSum.hpChange));
             }
             if (currentUnitSum.isDot){
-                Debug.Log("is dot");
                 currentUnitSum.unit.addStatus(currentUnitSum.dotStatusScriptableObject);
             }
 
