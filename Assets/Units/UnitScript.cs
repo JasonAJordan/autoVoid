@@ -34,7 +34,7 @@ public class UnitScript : MonoBehaviour
 
 
     // UI related
-
+    public GameObject ThisGameObject;
     public GameObject UnitStatus;
     public TextMeshProUGUI hpText;
 
@@ -52,7 +52,7 @@ public class UnitScript : MonoBehaviour
         statues = unitInit.statuses;
         GetComponent<SpriteRenderer>().sprite = unitInit.baseArtwork;
 
-        
+
 
     }
 
@@ -65,19 +65,19 @@ public class UnitScript : MonoBehaviour
     }
 
     // For now we will be only using "blight"
-    public void UpdateUnitStatus(){
-        Debug.Log(title + statues.Count);
-        foreach (StatusSO status in statues){
-            Debug.Log(status.title);
-            // if (status.title == "BlightTest"){
-            // Transform blitTest = transform.Find("BlightTest");
-            // if (blitTest){
-            //     blitTest.GetComponent<SpriteRenderer>().enabled = true;
-            // }
-            // }
-        }
+    // public void UpdateUnitStatus(){
+    //     Debug.Log(title + statues.Count);
+    //     foreach (StatusSO status in statues){
+    //         Debug.Log(status.title);
+    //         // if (status.title == "BlightTest"){
+    //         // Transform blitTest = transform.Find("BlightTest");
+    //         // if (blitTest){
+    //         //     blitTest.GetComponent<SpriteRenderer>().enabled = true;
+    //         // }
+    //         // }
+    //     }
 
-    }
+    // }
 
 
     // This will get the attack damage done and slot(s) hit 
@@ -88,14 +88,7 @@ public class UnitScript : MonoBehaviour
     public MoveSO GetAttack(List<GameObject> opposition, bool fromCreateAttackOrder ){
         // testing
 
-
-
-
-
-
         bool isValidAttack = false; 
-        //int[] threeUnits = {0,1,2,4,5,7};
-        //List<int> threeUnitValid = new List<int>(threeUnits);
         int[] twoUnits = {0,1,4,5,7,8,9};
         List<int> twoUnitValid = new List<int>(twoUnits);
         int[] oneUnits = {0,4,7,9};
@@ -169,15 +162,49 @@ public class UnitScript : MonoBehaviour
             select s).ToList();
         StatusSO newStatus = ScriptableObject.Instantiate<StatusSO>(status);
 
-        // This way might be overkill... 
-        GameObject newStatusGameObject = ScriptableObject.Instantiate<GameObject>(UnitStatus, transform.position, Quaternion.identity);
-        newStatusGameObject.GetComponent<SpriteRenderer>().sprite = status.baseArtwork;
-        newStatusGameObject.transform.Translate(0, .9f, 0);
-        newStatusGameObject.transform.localScale -= new Vector3(.16f,.16f,0);
-        UnitStatus = newStatusGameObject;
+        if (statues.Any( x=> x.title == status.title)){
+            // For now we will just refresh the status
+            StatusSO oldStatus = statues.Find(x => x.title == status.title);
+            oldStatus = status;
+            Debug.Log("Debuff reapplied!");
+        } else {
+            // This way might be overkill... 
+            // Also needs to be a function to check for status that are already applied 
+            GameObject newStatusGameObject = ScriptableObject.Instantiate<GameObject>(UnitStatus, transform.position, Quaternion.identity);
+            newStatusGameObject.name = status.title;
+            newStatusGameObject.tag = status.title;
+            newStatusGameObject.GetComponent<SpriteRenderer>().sprite = status.baseArtwork;
+            newStatusGameObject.transform.Translate(0, .9f, 0);
+            newStatusGameObject.transform.localScale = new Vector3(.08f,.08f,0);
+            
+            newStatusGameObject.transform.parent = ThisGameObject.transform;
+            UnitStatus = newStatusGameObject;
+        }
+
 
         newStatues.Add(newStatus);
         statues = newStatues;
         // UpdateUnitStatus();
+    }
+
+    public string executeStatus(){
+        String returnString = "";
+        for (int i  = 0; i< statues.Count; i++){
+            StatusSO status = statues[i];
+            changeHP(status.hpChange);
+            status.actionsTurnsRemaining = status.actionsTurnsRemaining - 1;
+            returnString = title + " took " + status.hpChange + " from " + status.title;
+            if (status.actionsTurnsRemaining == 0 ){
+                statues.RemoveAt(i);
+                GameObject statusRenderGO = transform.Find(status.title).gameObject;
+
+                if (statusRenderGO){
+                    Destroy(statusRenderGO);
+                    //statusRender.GetComponent<SpriteRenderer>().enabled = false;
+                }
+                i--;
+            }
+        }
+        return returnString;
     }
 }

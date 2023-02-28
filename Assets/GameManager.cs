@@ -18,15 +18,8 @@ public class GameManager : MonoBehaviour
     // Battle Settings 
 
     public int turnLength; 
-
-    // public GameObject hero1;
-    // public GameObject hero2;
-    // public GameObject hero3;
-    // public GameObject hero4;
     
     public List<GameObject> heroes;
-
-    // public GameObject enemy1; 
 
     public List<GameObject> enemies;
 
@@ -70,7 +63,8 @@ public class GameManager : MonoBehaviour
             period = period - turnSpeed;
 
             // run any test that are need for a new turn
-            checkAllUnitStatus();
+            // NEW no longer needed as status are now applied after the attack!!
+            // checkAllUnitStatus();
 
 
             UnitScript currentUnit = attackOrder[counter % attackOrder.Count];
@@ -83,8 +77,7 @@ public class GameManager : MonoBehaviour
             // GetAttack will get the next possible attack. 
             MoveSO moveScript = currentUnit.GetAttack(opposition, false); 
             executeMove(currentUnit, moveScript);
-
-            executeStatus(currentUnit); 
+            executeUnitStatus(currentUnit); 
 
             counter++; 
             actionCounter.text = "Action Number " + counter;
@@ -125,16 +118,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void checkAllUnitStatus(){
-        foreach (GameObject enemy in enemies){
-            enemy.gameObject.GetComponent<UnitScript>().UpdateUnitStatus();
-        }
+    // public void checkAllUnitStatus(){
+    //     foreach (GameObject enemy in enemies){
+    //         enemy.gameObject.GetComponent<UnitScript>().UpdateUnitStatus();
+    //     }
 
-        foreach (GameObject hero in heroes){
-            hero.gameObject.GetComponent<UnitScript>().UpdateUnitStatus();
-        }
+    //     foreach (GameObject hero in heroes){
+    //         hero.gameObject.GetComponent<UnitScript>().UpdateUnitStatus();
+    //     }
 
-    }
+    // }
 
     public void findTurnLength(){
         int enemiesAttacks = enemies.Select(enemy => enemy.gameObject.GetComponent<UnitScript>().attackTimes ).ToList().Aggregate(0, (total, next) => total + next);
@@ -233,23 +226,10 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void executeStatus (UnitScript unit){
-        // Debug.Log("Running Statuses" + unit.title); 
+    public void executeUnitStatus (UnitScript unit){
+        // Not sure if I should have a function do "2"ish things... 
+        etcDisplayText.text = unit.executeStatus();
 
-        for (int i  = 0; i< unit.statues.Count; i++){
-            StatusSO status = unit.statues[i];
-            unit.changeHP(status.hpChange);
-            status.actionsTurnsRemaining = status.actionsTurnsRemaining - 1;
-            etcDisplayText.text = unit.title + " took " + status.hpChange + " from " + status.title;
-            if (status.actionsTurnsRemaining == 0 ){
-                unit.statues.RemoveAt(i);
-                Transform statusRender = unit.transform.Find(status.title);
-                if (statusRender){
-                    statusRender.GetComponent<SpriteRenderer>().enabled = false;
-                }
-                i--;
-            }
-        }
 
     }
     
