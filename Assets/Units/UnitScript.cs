@@ -178,7 +178,6 @@ public class UnitScript : MonoBehaviour
             newStatusGameObject.transform.localScale = new Vector3(.08f,.08f,0);
             
             newStatusGameObject.transform.parent = ThisGameObject.transform;
-            UnitStatus = newStatusGameObject;
         }
 
 
@@ -192,12 +191,12 @@ public class UnitScript : MonoBehaviour
         for (int i  = 0; i< statues.Count; i++){
             StatusSO status = statues[i];
             changeHP(status.hpChange);
+            int hpChangeAbs = Math.Abs(status.hpChange);
             status.actionsTurnsRemaining = status.actionsTurnsRemaining - 1;
-            returnString = title + " took " + status.hpChange + " from " + status.title;
+            returnString = title + " took " + hpChangeAbs + " from " + status.title;
             if (status.actionsTurnsRemaining == 0 ){
                 statues.RemoveAt(i);
                 GameObject statusRenderGO = transform.Find(status.title).gameObject;
-
                 if (statusRenderGO){
                     Destroy(statusRenderGO);
                     //statusRender.GetComponent<SpriteRenderer>().enabled = false;
