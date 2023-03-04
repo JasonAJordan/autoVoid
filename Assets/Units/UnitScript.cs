@@ -64,20 +64,6 @@ public class UnitScript : MonoBehaviour
 
     }
 
-    // For now we will be only using "blight"
-    // public void UpdateUnitStatus(){
-    //     Debug.Log(title + statues.Count);
-    //     foreach (StatusSO status in statues){
-    //         Debug.Log(status.title);
-    //         // if (status.title == "BlightTest"){
-    //         // Transform blitTest = transform.Find("BlightTest");
-    //         // if (blitTest){
-    //         //     blitTest.GetComponent<SpriteRenderer>().enabled = true;
-    //         // }
-    //         // }
-    //     }
-
-    // }
 
 
     // This will get the attack damage done and slot(s) hit 
@@ -96,34 +82,40 @@ public class UnitScript : MonoBehaviour
         
         // Debug.Log(title + moves.Count);
         MoveSO currentMove = moves[actionNumber % moves.Count];
-
-        for (int i = 0; i < 4; i++){
-            if (opposition.Count == 4){
-                isValidAttack = true;
-                break;
-            } else if (opposition.Count == 3 && currentMove.slot != 3){
-                isValidAttack = true;
-                break;
-            } else if (opposition.Count == 2){
-                if (twoUnitValid.Contains(currentMove.slot)){
+        // Only attacks moves can "fail" due to not having a target, 
+        // buffs will always go through 
+        if (currentMove.isDamage){ 
+            for (int i = 0; i < 4; i++){
+                if (opposition.Count == 4){
                     isValidAttack = true;
                     break;
-                }
-            } else {
-                if (oneUnitValid.Contains(currentMove.slot)){
+                } else if (opposition.Count == 3 && currentMove.slot != 3){
                     isValidAttack = true;
                     break;
+                } else if (opposition.Count == 2){
+                    if (twoUnitValid.Contains(currentMove.slot)){
+                        isValidAttack = true;
+                        break;
+                    }
+                } else {
+                    if (oneUnitValid.Contains(currentMove.slot)){
+                        isValidAttack = true;
+                        break;
+                    }
                 }
+                // This will cause the priority move NOT to go off and NOT select the next move. 
+                // This is so if a priority moves fails, the unit will not act at a higher speed tier with a "stronger" move. 
+                // Also it adds a draw back to priority moves. 
+                if (currentMove.priorityLevel == 1 && !fromCreateAttackOrder){
+                    break; 
+                }
+                actionNumber++;
+                currentMove = moves[actionNumber % moves.Count];
             }
-            // This will cause the priority move NOT to go off and NOT select the next move. 
-            // This is so if a priority moves fails, the unit will not act at a higher speed tier with a "stronger" move. 
-            // Also it adds a draw back to priority moves. 
-            if (currentMove.priorityLevel == 1 && !fromCreateAttackOrder){
-                break; 
-            }
-            actionNumber++;
-            currentMove = moves[actionNumber % moves.Count];
+        } else {
+            isValidAttack = true;
         }
+
         // moving the actionNumber++ to damageUnit() so I can run this check in multi locations; 
         // actionNumber++;
         return isValidAttack ? currentMove : CreateDudAttack();
@@ -183,7 +175,6 @@ public class UnitScript : MonoBehaviour
 
         newStatues.Add(newStatus);
         statues = newStatues;
-        // UpdateUnitStatus();
     }
 
     public string executeStatus(){

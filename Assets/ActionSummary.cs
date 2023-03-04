@@ -10,7 +10,11 @@ public class ActionSummary : MonoBehaviour
     public bool isDamage;
     public bool isDot;
 
+    public bool isBuff;
+
     public StatusSO dotStatusScriptableObject; 
+
+    public StatusSO BuffScriptableObject;
 
     public MoveType movetype;
     public int hpChange; 

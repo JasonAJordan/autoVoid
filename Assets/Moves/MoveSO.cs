@@ -18,9 +18,24 @@ public class MoveSO : ScriptableObject
 
     public float critMod; 
 
+    // Dot
     public bool isDot;
 
     public StatusSO dotStatusScriptableObject; 
+
+    // Buffs 
+    // For buffs I will be split it to two main branches
+    // Self and party
+    // party will be split further into target (1) or all (all current alies)
+    public bool isSelfBuff;
+
+    public StatusSO selfBuff;
+
+    public bool isPartyBuff;
+
+    public StatusSO partyBuff;
+
+    public bool partySingleOrAll; // True = single, False = All, This can be for buffs and healing. 
 
     // This will get the attack damage done and slot(s) hit 
     // for now [0,1,2,3], [4 4 - -], [- 5 5 -], [- - 6 6], [7 7 7 -], [- 8 8 8], [ 9 9 9 9]

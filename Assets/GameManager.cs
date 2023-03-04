@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
 
             List<GameObject> opposition = currentUnit.enemy ? heroes : enemies; 
             
+            // I will need to update GetAttack, executeMove, & executeMoveSummaries each time I update moves for new functions 
             // GetAttack will get the next possible attack. 
             MoveSO moveScript = currentUnit.GetAttack(opposition, false); 
             executeMove(currentUnit, moveScript);
@@ -183,35 +184,69 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void executeMove(UnitScript attackingUnit, MoveSO moveScript){
+    public void executeMove(UnitScript currentUnit, MoveSO moveScript){
         // Debug.Log("Running Attack for" + attackingUnit.title); 
         List<ActionSummary> effectedUnits = new List<ActionSummary>(); 
-        if (!attackingUnit.enemy){ // Hero attacking
-            List<int> enemySlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
-            // I would need a check to see if there is a unit to be hit so I don't get a out of range bug. 
+        List<int> enemySlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
+        List<int> heroSlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
+
+        if (moveScript.isDamage){ // Checking if the move is an attack; 
+            if (!currentUnit.enemy){ // Hero attacking
+                // List<int> enemySlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
+                // I would need a check to see if there is a unit to be hit so I don't get a out of range bug. 
                 for (int i = 0; i < enemySlots.Count; i++){ 
                     UnitScript eScript = enemies[enemySlots[i]].gameObject.GetComponent<UnitScript>();
-
-                    effectedUnits.Add(unitActionSummary(eScript, attackingUnit, moveScript));
+                    effectedUnits.Add(unitActionSummary(eScript, currentUnit, moveScript));
                 }
-            
-        } else {
-            List<int> heroSlots = GetSlots(moveScript.slot, moveScript.numOfTargets);
+                
+            } else {
                 for (int i = 0; i < heroSlots.Count; i++){
                     UnitScript eScript = heroes[heroSlots[i]].gameObject.GetComponent<UnitScript>();
-                    effectedUnits.Add(unitActionSummary(eScript, attackingUnit, moveScript));
+                    effectedUnits.Add(unitActionSummary(eScript, currentUnit, moveScript));
                 }
+            }
+        } else if (moveScript.isSelfBuff){
+            // For self buffs I still need to add the current unit
+            effectedUnits.Add(unitActionSummary(currentUnit, currentUnit, moveScript));
+        } else { 
+
+            // I would need to test None self buffs later but I'm writing the code now
+            if (moveScript.partySingleOrAll){ // True = single, False = All
+                if (!currentUnit.enemy){ // Hero action 
+                    int randomUnitIdx = Random.Range(0,enemies.Count);
+                    UnitScript eScript = enemies[heroSlots[randomUnitIdx]].gameObject.GetComponent<UnitScript>();
+                    effectedUnits.Add(unitActionSummary(eScript, currentUnit, moveScript));
+                } else {
+                    int randomUnitIdx = Random.Range(0,heroes.Count);
+                    UnitScript eScript = enemies[heroSlots[randomUnitIdx]].gameObject.GetComponent<UnitScript>();
+                    effectedUnits.Add(unitActionSummary(eScript, currentUnit, moveScript));
+                }
+            } else {
+                if (!currentUnit.enemy){ // Hero action 
+                    for (int i = 0; i < heroes.Count; i++){ 
+                        UnitScript eScript = heroes[i].gameObject.GetComponent<UnitScript>();
+                        effectedUnits.Add(unitActionSummary(eScript, currentUnit, moveScript));
+                    }
+                } else {
+                    for (int i = 0; i < enemies.Count; i++){ 
+                        UnitScript eScript = enemies[i].gameObject.GetComponent<UnitScript>();
+                        effectedUnits.Add(unitActionSummary(eScript, currentUnit, moveScript));
+                    }
+                }
+            }
         }
-        executeMoveSummaries( attackingUnit,  effectedUnits, moveScript);
+        
+        executeMoveSummaries( currentUnit,  effectedUnits, moveScript);
     }
 
-    public void executeMoveSummaries(UnitScript attackingUnit, List<ActionSummary> effectedUnitsSummary, MoveSO moveScript){
+    public void executeMoveSummaries(UnitScript currentUnit, List<ActionSummary> effectedUnitsSummary, MoveSO moveScript){
 
         actionDisplayText.text = "";
-        string tempActionDisplayText = attackingUnit.title + " used " + moveScript.title;;
+        string tempActionDisplayText = currentUnit.title + " used " + moveScript.title;;
         for (int i = 0; i< effectedUnitsSummary.Count; i++){
             ActionSummary currentUnitSum = effectedUnitsSummary[i];
             // Here I will need to add the "switch statemts for heals, buffs, debuffs etc
+            // self buffs will also be seprate from buffs 
             if (currentUnitSum.isDamage){
                 currentUnitSum.unit.changeHP(currentUnitSum.hpChange);
                 tempActionDisplayText += actionDisplayText.text + ". Damaged " + currentUnitSum.unit.title + " for " + (Mathf.Abs(currentUnitSum.hpChange));
@@ -219,10 +254,15 @@ public class GameManager : MonoBehaviour
             if (currentUnitSum.isDot){
                 currentUnitSum.unit.addStatus(currentUnitSum.dotStatusScriptableObject);
             }
-
+            if (currentUnitSum.isBuff){
+                currentUnitSum.unit.addStatus(currentUnitSum.BuffScriptableObject);
+            }
         }
+
+
+
         actionDisplayText.text = tempActionDisplayText;
-        attackingUnit.actionNumber++;
+        currentUnit.actionNumber++;
 
     }
 
@@ -269,6 +309,11 @@ public class GameManager : MonoBehaviour
         if (moveScript.isDot){
             summary.isDot = true; 
             summary.dotStatusScriptableObject = moveScript.dotStatusScriptableObject;
+        }
+
+        if (moveScript.isSelfBuff){
+            summary.isBuff = true;
+            summary.BuffScriptableObject = moveScript.selfBuff;
         }
 
 
