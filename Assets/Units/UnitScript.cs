@@ -154,6 +154,7 @@ public class UnitScript : MonoBehaviour
             select s).ToList();
         StatusSO newStatus = ScriptableObject.Instantiate<StatusSO>(status);
 
+        // 
         if (statues.Any( x=> x.title == status.title)){
             // For now we will just refresh the status
             StatusSO oldStatus = statues.Find(x => x.title == status.title);
@@ -164,12 +165,16 @@ public class UnitScript : MonoBehaviour
             // Also needs to be a function to check for status that are already applied 
             GameObject newStatusGameObject = ScriptableObject.Instantiate<GameObject>(UnitStatus, transform.position, Quaternion.identity);
             newStatusGameObject.name = status.title;
-            newStatusGameObject.tag = status.title;
+            
+            // I forgot why we would need the tag when we use the title...
+            // newStatusGameObject.tag = status.title;
             newStatusGameObject.GetComponent<SpriteRenderer>().sprite = status.baseArtwork;
-            newStatusGameObject.transform.Translate(0, .9f, 0);
+            float translateSpriteHeight = (newStatues.Count() + 1f)  * .9f ; 
+            newStatusGameObject.transform.Translate(0, translateSpriteHeight, 0);
             newStatusGameObject.transform.localScale = new Vector3(.08f,.08f,0);
             
             newStatusGameObject.transform.parent = ThisGameObject.transform;
+            reTranslateStatusSprites();
         }
 
 
@@ -190,11 +195,23 @@ public class UnitScript : MonoBehaviour
                 GameObject statusRenderGO = transform.Find(status.title).gameObject;
                 if (statusRenderGO){
                     Destroy(statusRenderGO);
-                    //statusRender.GetComponent<SpriteRenderer>().enabled = false;
+                    reTranslateStatusSprites();
                 }
                 i--;
             }
         }
+        
         return returnString;
+    }
+
+    public void reTranslateStatusSprites(){
+        float translateSpriteHeight = 0.9f;
+        Vector3 UnitGOPos = transform.position; 
+        foreach (StatusSO status in statues){
+            GameObject statusRenderGO = transform.Find(status.title).gameObject;
+            statusRenderGO.transform.position = UnitGOPos;
+            statusRenderGO.transform.Translate(0, translateSpriteHeight, 0);
+            translateSpriteHeight += 0.9f;
+        }
     }
 }
