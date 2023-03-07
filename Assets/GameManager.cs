@@ -253,9 +253,11 @@ public class GameManager : MonoBehaviour
             }
             if (currentUnitSum.isDot){
                 currentUnitSum.unit.addStatus(currentUnitSum.dotStatusScriptableObject);
+                
             }
             if (currentUnitSum.isBuff){
                 currentUnitSum.unit.addStatus(currentUnitSum.BuffScriptableObject);
+                tempActionDisplayText +=  currentUnitSum.unit.title + "has applied " + actionDisplayText.text;
             }
         }
 

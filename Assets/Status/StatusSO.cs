@@ -5,6 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Status")]
 public class StatusSO : ScriptableObject
 {
+    // fake enum  0 -> dot, 1 -> buff, also not being used currently
+    public int statusType;
+
     // common
     public string title;
 
@@ -17,5 +20,6 @@ public class StatusSO : ScriptableObject
 
     // buffs and debuffs related
     
+    public int tempStatAttackChange;
 
 }

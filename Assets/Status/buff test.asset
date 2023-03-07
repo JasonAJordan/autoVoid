@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: BuffTest
   actionsTurnsRemaining: 3
-  baseArtwork: {fileID: 21300000, guid: f3cfde0f508279240a8a42b399e77c3e, type: 3}
+  baseArtwork: {fileID: 21300000, guid: a0cb49e72d571b44e98e804c1c1df7ee, type: 3}
   hpChange: 0

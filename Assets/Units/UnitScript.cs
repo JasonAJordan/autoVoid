@@ -166,8 +166,14 @@ public class UnitScript : MonoBehaviour
             GameObject newStatusGameObject = ScriptableObject.Instantiate<GameObject>(UnitStatus, transform.position, Quaternion.identity);
             newStatusGameObject.name = status.title;
             
+            // Buff / debuffs stat changes will be here
+            executeStatusStatChange(true, status);
+
+
             // I forgot why we would need the tag when we use the title...
             // newStatusGameObject.tag = status.title;
+
+
             newStatusGameObject.GetComponent<SpriteRenderer>().sprite = status.baseArtwork;
             float translateSpriteHeight = (newStatues.Count() + 1f)  * .9f ; 
             newStatusGameObject.transform.Translate(0, translateSpriteHeight, 0);
@@ -184,13 +190,24 @@ public class UnitScript : MonoBehaviour
 
     public string executeStatus(){
         String returnString = "";
+
+
         for (int i  = 0; i< statues.Count; i++){
             StatusSO status = statues[i];
             changeHP(status.hpChange);
             int hpChangeAbs = Math.Abs(status.hpChange);
             status.actionsTurnsRemaining = status.actionsTurnsRemaining - 1;
-            returnString = title + " took " + hpChangeAbs + " from " + status.title;
+            if (status.statusType == 0){
+                returnString = title + " took " + hpChangeAbs + " from " + status.title;
+            } 
+            // else if (status.statusType == 1){
+            //     returnString = status.title + " has been applied to " + title; 
+            // }
+
             if (status.actionsTurnsRemaining == 0 ){
+
+                executeStatusStatChange(false, status);
+
                 statues.RemoveAt(i);
                 GameObject statusRenderGO = transform.Find(status.title).gameObject;
                 if (statusRenderGO){
@@ -202,6 +219,14 @@ public class UnitScript : MonoBehaviour
         }
         
         return returnString;
+    }
+
+    public void executeStatusStatChange(bool adding, StatusSO status){
+        if (adding){
+            statAttack += status.tempStatAttackChange;
+        } else {
+            statAttack -= status.tempStatAttackChange;
+        }
     }
 
     public void reTranslateStatusSprites(){
