@@ -200,9 +200,7 @@ public class UnitScript : MonoBehaviour
             if (status.statusType == 0){
                 returnString = title + " took " + hpChangeAbs + " from " + status.title;
             } 
-            // else if (status.statusType == 1){
-            //     returnString = status.title + " has been applied to " + title; 
-            // }
+
 
             if (status.actionsTurnsRemaining == 0 ){
 
