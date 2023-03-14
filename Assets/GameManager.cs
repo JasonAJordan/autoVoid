@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
     // Battle Actives
     public bool battleLive; 
-    public float turnSpeed = 1.0f;
+    public float turnSpeed = 0.5f;
     public float period = 1.0f;
     public int counter = 0;
     public int turn; 
