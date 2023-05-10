@@ -149,7 +149,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 282495488}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c61b9c52b00612d4f985b65b30f039f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 1bc00aacc67020142b365b8adb37f469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   startGame: MainScene
@@ -1194,8 +1194,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'How To Play:
 
-    Work in progress... have your units select attack priority
-    and equip items. '
+    Work in progress... '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1464,8 +1463,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Jason''s Presonal Project. Darkest Dugeon Inspired game but I wanted the
-    game loop to be much faster. '
+  m_text: Jason's Presonal Project. Mostly to learn Unity
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

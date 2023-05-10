@@ -1,16 +1,9 @@
 fileFormatVersion: 2
-guid: 042326d76ec1b9f44af0073da832b964
+guid: bc75d730ec8283f46a3cf8ac63b5b11b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - Hero1: {instanceID: 0}
-  - Hero2: {instanceID: 0}
-  - Hero3: {instanceID: 0}
-  - Hero4: {instanceID: 0}
-  - Enemy1: {instanceID: 0}
-  - ActionCounter: {instanceID: 0}
-  - startCombatButton: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
